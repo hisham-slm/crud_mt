@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Document</title>
+</head>
+<style>
+    .sticky {
+        position: sticky;
+        top: 0;
+    }
+
+    .nav_bar {
+        display: flex;
+        grid-template-columns: auto auto;
+        justify-content: left;
+        width: 100%;
+        background-color: #b3f0ff;
+        padding: 5px;
+
+    }
+
+    .nav_left {
+        display: grid;
+        grid-template-columns: auto auto;
+    }
+
+    .nav_left img {
+        width: 100px;
+        height: auto;
+        z-index: 0;
+    }
+
+    .nav_right {
+        display: flex;
+        justify-content: center;
+        padding-left: 500px;
+        padding-top: 25px;
+ 
+    }
+
+    .nav_right a {
+        padding: 10px;
+        font-family: 'Poppins', sans-serif;
+        background-color: #b3f0ff;
+        text-decoration: none;
+        color: black;
+        font-weight: bold;
+        justify-content: center;
+    }
+    .contents{
+        padding-left: 200px;
+        padding: 10px;
+        margin: 50px;
+    }
+    .contents h1{
+        text-align: center;
+    }
+</style>
+
+<body>
+    <div class="sticky">
+        <div class="nav_bar">
+            <div class="nav_left">
+                <img src="{% static 'common_static\images\reshot-icon-social-media-cloud-PS93DZTGYL.svg' %}" alt="">
+                <h1>Shareit.</h1>
+            </div>
+            <div class="nav_right">
+                <a href="{% url 'user:create_post' %}">Create a Post</a>
+                <a href="{% url 'user:logout' %}">Log Out</a>
+            </div>
+        </div>
+    </div>
+    <div class="contents">
+        {% for post in post reversed %}
+        {{post.user.username}}
+        <h1> {{post.post}}</h1>
+        <a href="{% url 'user:like_post' post.id %}"><i class="fa fa-thumbs-o-up" style="font-size:24px"></i></a>
+        <strong>Liked by {{post.votes}} person</strong>
+        <hr>
+        {% endfor %}
+    </div>
+</body>
+
+</html>

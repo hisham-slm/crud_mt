@@ -1,0 +1,213 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://code.jquery.com/jquery-3.6.3.js"
+        integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+</head>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
+
+    .login_card_outer {
+        display: flex;
+        justify-content: center;
+        color: #330066;
+
+    }
+
+    .login_card {
+        width: 30%;
+        margin-top: 150px;
+        margin-bottom: 150px;
+        display: grid;
+        grid-gap: 20px;
+        justify-content: center;
+        padding-bottom: 20px;
+        box-shadow: 5px 5px 30px rgba(136, 136, 136, 0.513);
+        background-color: #b3f0ff;
+        font-family: 'Poppins';
+    }
+
+    .login_header {
+        text-align: center;
+        font-family: 'Poppins';
+    }
+
+    .login_form button {
+        margin: 20px;
+    }
+
+    .login_form input {
+        margin: 20px;
+        display: flex;
+        justify-content: center;
+        text-decoration: none;
+        border: 0px;
+        color: black;
+        /* box-shadow: 5px 5px 30px rgba(136, 136, 136, 0.513); */
+        height: 25px;
+        width: 300px;
+        caret-color: rgb(232, 219, 219);
+        font-family: 'Poppins';
+        caret-color: #330066;
+        background-color: rgba(234, 234, 234, 0.1);
+
+    }
+
+    .login_card button {
+        text-decoration: none;
+        border: 0px;
+        color: rgb(0, 0, 0);
+        /* box-shadow: 5px 5px 30px rgba(136, 136, 136, 0.513); */
+        height: 25px;
+        display: grid;
+        justify-content: center;
+        width: 300px;
+        font-family: 'Poppins';
+        background-color: white;
+        transition: 0.3s;
+        color: #330066;
+    }
+
+    .login_card button:hover {
+        text-decoration: none;
+        border: 0px;
+        color: rgb(0, 0, 0);
+        /* box-shadow: 5px 5px 30px rgba(136, 136, 136, 0.513); */
+        height: 25px;
+        display: grid;
+        justify-content: center;
+        width: 300px;
+        font-family: 'Poppins';
+        background-color: #330066;
+        color: white;
+        font-weight: bolder;
+        transition: 0.3s;
+        font-size: medium;
+    }
+
+    .forgot {
+        font-family: 'Poppins';
+        /* margin-left: 500px; */
+        text-align: center;
+        padding: 15px;
+
+
+    }
+
+    .forgot a {
+        text-decoration: none;
+        transition: 0.3s;
+        color: #330066;
+    }
+
+    .forgot a:hover {
+        text-decoration: none;
+        color: #330066;
+        font-size: large;
+        transition: 0.3s;
+    }
+
+    .error {
+        display: flex;
+        justify-content: center;
+    }
+
+    .email_exist {
+        text-align: center;
+    }
+</style>
+
+<body>
+    <div class="login_card_outer">
+        <div class="login_card">
+            <h1 class="login_header">Sign Up</h1>
+            <form id="form" action="" class="login_form" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <input id="username" name="username" type="text" placeholder="User Name">
+                <span id="ln_error"></span>
+                <input id="password" name="password" type="password" placeholder="Password">
+                <span id="email_error"></span>
+                <input id="repassword" name="repassword" type="password" placeholder="Confirm Password">
+                <span id="pass_error"></span>
+                <input id="name" name="name" type="text" placeholder="Name">
+                <span id="fn_error"></span>
+                <button id="submit">Sign Up</button>
+            </form>
+            <div class="error">
+                <span class="email_exist" id="email_exist"></span>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            console.log('ready')
+            $('#repassword').change(function () {
+                repass = $('#repassword').val()
+                password = $('#password').val()
+                error = $('#email_exist')
+
+
+                if (password != repass) {
+                    error.html("Passwords doesn't match")
+                    $("#form").removeAttr('method');
+                }
+                else if (password == repass) {
+                    error.html("");
+                    $("#form").attr('method','POST')
+
+
+
+
+
+                }
+            })
+        })
+
+        $('#username').change(function () {
+
+            $.ajaxSetup({
+                headers: {
+                    "X-CSRFToken": $('[name=csrfmiddlewaretoken]').val()  //passing csrf token in ajax request
+                }
+            })
+
+            $.ajax({
+                url: "{% url 'common:username_exist' %}",  // url in which ajax call is made
+                type: 'POST',  //method in which data is send
+                data: {
+                    username: $(this).val()  //sending data in json fromat here, key is email
+                },
+                success: function (response) {
+                    console.log(response.status)
+                    if (response.status == true) {
+                        $("#form").removeAttr('method')
+                        
+
+                        $('#email_exist').html('Username Already Taken');
+                        $("#username").click(function () {
+                            var email = $('#username').val("")
+                            console.log(email.val)
+                        })
+                    }else{
+                        $("#form").attr('method','POST')
+                    }
+                }
+            })
+
+        })
+    </script>
+
+
+</body>
+
+</html>

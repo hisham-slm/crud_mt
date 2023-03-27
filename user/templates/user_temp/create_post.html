@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.3.js"
+        integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <title>Document</title>
+</head>
+<style>
+    .sticky {
+        position: sticky;
+        top: 0;
+    }
+
+    .nav_bar {
+        display: flex;
+        grid-template-columns: auto auto;
+        justify-content: left;
+        width: 100%;
+        background-color: #b3f0ff;
+        padding: 5px;
+
+    }
+
+    .nav_left {
+        display: grid;
+        grid-template-columns: auto auto;
+    }
+
+    .nav_left img {
+        width: 100px;
+        height: auto;
+        z-index: 0;
+    }
+
+    .nav_right {
+        display: flex;
+        justify-content: center;
+        padding-left: 500px;
+        padding-top: 25px;
+
+    }
+
+    .nav_right a {
+        padding: 10px;
+        font-family: 'Poppins', sans-serif;
+        background-color: #b3f0ff;
+        text-decoration: none;
+        color: black;
+        font-weight: bold;
+        justify-content: center;
+    }
+
+    .content {
+        display: flex;
+        justify-content: center;
+    }
+
+    form {
+        padding: 50px;
+        justify-content: center;
+    }
+
+    .content button {
+        justify-content: center;
+    }
+</style>
+
+<body>
+    <div class="sticky">
+        <div class="nav_bar">
+            <div class="nav_left">
+                <img src="{% static 'common_static\images\reshot-icon-social-media-cloud-PS93DZTGYL.svg' %}" alt="">
+                <h1>Shareit.</h1>
+            </div>
+            <div class="nav_right">
+                <a href="{% url 'user:uploaded_post' %}">Uploaded Posts</a>
+                <a href="{% url 'user:logout' %}">Log Out</a>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <form id="form" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            <textarea name="post" id="post" cols="30" rows="10" placeholder="Enter your quotes here"></textarea><br>
+            <input type="checkbox" name="" id=""> Agreed to the terms and conditions <br>
+            <button id="button">Post</button>
+            {{msg}}
+        </form>
+    </div>
+    <script>
+        $(document).ready(function () {
+            console.log('ready')
+            post = $('#post')
+
+
+
+            $('#post').change(function () {
+                console.log('hovered')
+                if (post.val() != '') {
+                    $('#form').attr('method', 'POST')
+                }
+            })
+
+        })
+    </script>
+</body>
+
+</html>
